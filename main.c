@@ -5,7 +5,7 @@
 
 struct File{
     char name[64];
-    long size;
+    double size;
 };
 
 char * getPath();
@@ -17,9 +17,10 @@ int main(){
     struct dirent *dir;
     struct File files[64];
     int c = 0;
-    long size;
+    double size;
     char buf[256];
     char * slash = "/";
+    char * s;
 
     char * path = getPath();
 
@@ -37,7 +38,16 @@ int main(){
     for (int i=0; i<c; i++){
         if (files[i].name == NULL)
             break;
-        printf("%s - %ld bytes\n", files[i].name, files[i].size);
+
+        s = calculateSize(files[i].size);
+        if (strcmp(s, "kB") == 0)
+            printf("%s - %.2f kB\n", files[i].name, (files[i].size/1000));
+        else if (strcmp(s, "MB") == 0)
+            printf("%s - %.2f MB\n", files[i].name, (files[i].size/1000000));
+        else if (strcmp(s, "GB") == 0)
+            printf("%s - %.2f GB\n", files[i].name, (files[i].size/1000000));
+        else
+            printf("%s - %.0f bytes\n", files[i].name, files[i].size);
     }
 
     free(path);
@@ -73,4 +83,11 @@ long getFileSize(char * fileName){
     size = ftell(fp);
     fclose(fp);
     return size;
+}
+
+char * calculateSize(long size){
+    if (size >= 0 && size <= 999) return "B";
+    if (size >= 1000 && size < 1000000) return "kB";
+    if (size >= 1000001 && size < 1000000000) return "MB";
+    if (size >= 1000000001) return "GB";
 }
