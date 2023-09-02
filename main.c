@@ -12,7 +12,7 @@ char * getPath();
 long getFileSize(char * fileName);
 char * calculateSize(long size);
 
-int main(){
+int main(int argc, char **argv){
     DIR *directory;
     struct dirent *dir;
     struct File files[64];
