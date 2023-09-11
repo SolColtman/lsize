@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+// create a struct for each file to simplify things
 struct File{
     char name[64];
     double size;
@@ -24,6 +25,7 @@ int main(int argc, char **argv){
 
     char * path = getPath();
 
+    // open directory and get each name and size of each file
     directory = opendir(path);
     if (directory){
         while ((dir = readdir(directory)) != NULL){
@@ -39,7 +41,7 @@ int main(int argc, char **argv){
         if (files[i].name == NULL)
             break;
 
-        s = calculateSize(files[i].size);
+        s = calculateSize(files[i].size); // convert file sizes
         if (strcmp(s, "kB") == 0)
             printf("%s - %.2f kB\n", files[i].name, (files[i].size/1000));
         else if (strcmp(s, "MB") == 0)
@@ -54,6 +56,7 @@ int main(int argc, char **argv){
     return 0;
 }
 
+// get file path into a single char array
 char * getPath(){
     char *path;
     char *dot = "./";
@@ -70,6 +73,7 @@ char * getPath(){
     return path;
 }
 
+// get file size of specified file
 long getFileSize(char * fileName){
     FILE *fp;
     long size;
@@ -85,6 +89,7 @@ long getFileSize(char * fileName){
     return size;
 }
 
+// convert bytes to kb etc.
 char * calculateSize(long size){
     if (size >= 0 && size <= 999) return "B";
     if (size >= 1000 && size < 1000000) return "kB";
